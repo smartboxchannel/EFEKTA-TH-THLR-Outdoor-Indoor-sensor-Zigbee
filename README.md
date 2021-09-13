@@ -1,0 +1,1 @@
+# Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee
