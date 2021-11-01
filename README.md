@@ -84,7 +84,7 @@ https://github.com/sigma7i/zigbee-wiki/wiki/zigbee-firmware-install (RU)
 4. Press the reset button on the device (the join procedure will begin, еhe device starts flashing the LED repeatedly)
 5. Wait, in case of successfull join, device will flash led 5 times, if join failed, device will flash led 2 times
 
-![Efekta THP_LR \ THP](https://github.com/smartboxchannel/Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee/blob/main/SCHEME/003.png) 
+![Efekta THP_LR \ THP](https://github.com/smartboxchannel/Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee/blob/main/IMAGES/003.png) 
 
 ### Troubleshooting
 
