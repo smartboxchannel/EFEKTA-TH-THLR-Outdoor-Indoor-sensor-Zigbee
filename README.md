@@ -1,8 +1,8 @@
 # Efekta THP_LR \ THP
 
-##### Option 1 - DIY outdoor long-range sensor for temperature, humidity and atmospheric pressure
+##### Option 1 - DIY outdoor/indoor long-range sensor for temperature, humidity and atmospheric pressure
 
-##### Option 2 - DIY temperature, humidity and atmospheric pressure sensor, long battery life
+##### Option 2 - DIY outdoor/indoor temperature, humidity and atmospheric pressure sensor, long battery life
 
 #### Donate to me: https://paypal.me/efektalab or just buy to support this project
 
