@@ -4,6 +4,18 @@
 
 ##### Option 2 - DIY temperature, humidity and atmospheric pressure sensor, long battery life
 
+#### Donate to me: https://paypal.me/efektalab or just buy to support this project
+
+#### Sale: https://www.tindie.com/products/diyberk/temperature-humidity-sensor-efekta-zigbee2mqtt/
+
+#### Video: 
+
+#### Telegram ZigDev - https://t.me/zigdev
+
+#### Telegram DiyDev - https://t.me/diy_devices
+
+More info at http://efektalab.com/eON_THP
+
 
 
 ## V1_R1
