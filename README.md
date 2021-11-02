@@ -50,7 +50,7 @@ https://github.com/sigma7i/zigbee-wiki/wiki/zigbee-firmware-install (RU)
 
 ### Сonfiguring the firmware before compilation
 
-Open the preload file, select the desired configuration
+Open the preinclude.h file, select the desired configuration
 
 //#define OUTDOOR_LONG_RANGE
 
