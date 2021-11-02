@@ -48,6 +48,15 @@ https://github.com/ZigDevWiki/zigdevwiki.github.io/blob/main/docs/Begin/IAR_inst
 
 https://github.com/sigma7i/zigbee-wiki/wiki/zigbee-firmware-install (RU)
 
+### Сonfiguring the firmware before compilation
+
+Open the preload file, select the desired configuration
+
+//#define OUTDOOR_LONG_RANGE
+//#define BMP
+
+https://github.com/smartboxchannel/EFEKTA-THP-THPLR-Outdoor-Indoor-sensor-Zigbee/blob/9e8450923bca76330c3ec9616b2dffed900a4576/PROJECT%20SOURCE/THP/Source/preinclude.h#L85
+
 ---
 
 ### How to join:
