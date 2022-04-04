@@ -49,6 +49,20 @@ More info at http://efektalab.com/eON_THP
 
 ![Efekta THP_LR \ THP](https://github.com/smartboxchannel/Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee/blob/main/SCHEME/THP_THPLR.png) 
 
+
+### What is it?
+It is a wireless temperature, pressure and humidity sensor, supports working in Zigbee networks. (Zigbee2mqtt open source project). Built on CC2530 chip (Zigbee), two modications: Ebyte E18-MS1PA2-PCB radio module with amplifier and Ebyte E18-MS1-PCB. Powered by the most common AAA batteries. The device comes with pre-installed open source software. Supported inZ2M, ZHA
+
+### What makes it special?
+RF module EBYTE E18-MS1PA2-PCB (CC2530) or Ebyte E18-MS1-PCB.
+
+BME280 or BMP280
+
+Long runtime with two AAA battery.
+
+Consumption in data transmission mode ~25mA|50mA, in sleep mode 1.8μA.
+
+
 ### How to flash the device
 
 1. Download the Smart RF Flash Programmer V1 https://www.ti.com/tool/FLASH-PROGRAMMER
