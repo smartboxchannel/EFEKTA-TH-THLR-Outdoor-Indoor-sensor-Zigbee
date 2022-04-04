@@ -4,13 +4,19 @@
 
 ##### Option 2 - DIY outdoor/indoor temperature, humidity and atmospheric pressure sensor, long battery life
 
-#### Donate to me: https://paypal.me/efektalab or just buy to support this project
+#### Sale: 
 
-#### Sale: https://www.tindie.com/products/diyberk/temperature-humidity-sensor-efekta-zigbee2mqtt/
+The cost of the device without the enclosure: 
+$19.5 (shtc3: temperature, humidity)
+$27.5 (bme280: temperature, humidity, pressure)
++$3 Long range radio module
++$8 Enclosure
+Delivery is $8.5, + $2 for each additional device in the order.
+Tracknumber for tracking.
+You can purchase a ready-made device by writing to the mail hello@efektalab.com
+Delivery is carried out worldwide.
 
 #### Video: 
-
-#### Telegram ZigDev - https://t.me/zigdev
 
 #### Telegram DiyDev - https://t.me/diy_devices
 
