@@ -31,6 +31,8 @@
 
 More info at http://efektalab.com/eON_THP
 
+### You can make your own pcb here - https://www.pcbway.com/setinvite.aspx?inviteid=550959
+
 
 
 ## V1_R1
