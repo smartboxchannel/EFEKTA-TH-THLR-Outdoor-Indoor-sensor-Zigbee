@@ -1,4 +1,5 @@
 
-You can make your own pcb here - https://www.pcbway.com/project/shareproject/Efekta_THP_LR_THP_1021f3a3.html
+You can make your own pcb here - https://www.pcbway.com/setinvite.aspx?inviteid=550959
 
-1,2mm
+pcb 1.2mm - https://www.pcbway.com/project/shareproject/Efekta_THP_LR_THP_1021f3a3.html
+
