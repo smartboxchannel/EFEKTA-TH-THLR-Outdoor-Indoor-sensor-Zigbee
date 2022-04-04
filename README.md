@@ -7,14 +7,23 @@
 #### Sale: 
 
 The cost of the device without the enclosure: 
+
 $19.5 (shtc3: temperature, humidity)
+
 $27.5 (bme280: temperature, humidity, pressure)
+
 +$3 Long range radio module
+
 +$8 Enclosure
+
 Delivery is $8.5, + $2 for each additional device in the order.
+
 Tracknumber for tracking.
+
 You can purchase a ready-made device by writing to the mail hello@efektalab.com
+
 Delivery is carried out worldwide.
+
 
 #### Video: 
 
