@@ -4,25 +4,25 @@
 
 ##### Option 2 - DIY outdoor/indoor temperature, humidity and atmospheric pressure sensor, long battery life
 
-#### Sale: 
+### Sale: 
 
-The cost of the device without the enclosure: 
+#### The cost of the device without the enclosure: 
 
-$19.5 (shtc3: temperature, humidity)
+##### $19.5 (shtc3: temperature, humidity)
 
-$27.5 (bme280: temperature, humidity, pressure)
+##### $27.5 (bme280: temperature, humidity, pressure)
 
-+$3 Long range radio module
+##### +$3 Long range radio module
 
-+$8 Enclosure
+##### +$8 Enclosure
 
-Delivery is $8.5, + $2 for each additional device in the order.
+##### Delivery is $8.5, + $2 for each additional device in the order.
 
-Tracknumber for tracking.
+##### Tracknumber for tracking.
 
-You can purchase a ready-made device by writing to the mail hello@efektalab.com
+##### You can purchase a ready-made device by writing to the mail hello@efektalab.com
 
-Delivery is carried out worldwide.
+##### Delivery is carried out worldwide.
 
 
 #### Video: 
