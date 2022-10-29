@@ -8,15 +8,15 @@
 
 #### The cost of the device without the enclosure: 
 
-##### $19.5 (shtc3: temperature, humidity)
+##### $16.5 (shtc3: temperature, humidity)
 
-##### $27.5 (bme280: temperature, humidity, pressure)
+##### $22.5 (bme280: temperature, humidity, pressure)
 
 ##### +$3 Long range radio module
 
-##### +$8 Enclosure
+##### +$5 Enclosure
 
-##### Delivery is $8.5, + $2 for each additional device in the order.
+##### Delivery is $12.5(worldwide).
 
 ##### Tracknumber for tracking.
 
