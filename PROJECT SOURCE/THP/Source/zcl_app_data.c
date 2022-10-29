@@ -107,7 +107,7 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
 uint8 CONST zclApp_AttrsFirstEPCount = (sizeof(zclApp_AttrsFirstEP) / sizeof(zclApp_AttrsFirstEP[0]));
 
 const cId_t zclApp_InClusterListFirstEP[] = {ZCL_CLUSTER_ID_GEN_BASIC};
-#define APP_MAX_INCLUSTERS (sizeof(zclApp_InClusterList) / sizeof(zclApp_InClusterList[0]))
+#define APP_MAX_INCLUSTERS (sizeof(zclApp_InClusterListFirstEP) / sizeof(zclApp_InClusterListFirstEP[0]))
 
 const cId_t zclApp_OutClusterList[] = {POWER_CFG, TEMP, PRESSURE, HUMIDITY};
 #define APP_MAX_OUT_CLUSTERS (sizeof(zclApp_OutClusterList) / sizeof(zclApp_OutClusterList[0]))
@@ -118,7 +118,7 @@ SimpleDescriptionFormat_t zclApp_FirstEP = {
     ZCL_HA_DEVICEID_SIMPLE_SENSOR,                      //  uint16 AppDeviceId[2];
     APP_DEVICE_VERSION,                                 //  int   AppDevVer:4;
     APP_FLAGS,                                          //  int   AppFlags:4;
-    APP_MAX_INCLUSTERS_FIRST_EP,                        //  byte  AppNumInClusters;
+    APP_MAX_INCLUSTERS,                        //  byte  AppNumInClusters;
     (cId_t *)zclApp_InClusterListFirstEP,               //  byte *pAppInClusterList;
     APP_MAX_OUT_CLUSTERS,          //  byte  AppNumInClusters;
     (cId_t *)zclApp_OutClusterList //  byte *pAppInClusterList;

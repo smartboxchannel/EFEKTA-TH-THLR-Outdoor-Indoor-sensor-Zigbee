@@ -59,7 +59,7 @@
 
 #define HAL_KEY_P2_INPUT_PINS BV(0)
 
-#define OUTDOOR_LONG_RANGE
+//#define OUTDOOR_LONG_RANGE
 //#define BMP
 
 #include "hal_board_cfg.h"
