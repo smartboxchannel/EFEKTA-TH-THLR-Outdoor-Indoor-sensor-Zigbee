@@ -56,29 +56,6 @@
 #define INT_HEAP_LEN (2685 - 0x4B - 0xBB)
 #endif
 
-#ifdef DO_DEBUG_MT
-#define HAL_UART TRUE
-#define HAL_UART_DMA 1
-#define HAL_UART_ISR 2
-#define INT_HEAP_LEN (2688-0xC4-0x15-0x44-0x20-0x1E)
-
-#define MT_TASK
-
-#define MT_UTIL_FUNC
-#define MT_UART_DEFAULT_BAUDRATE HAL_UART_BR_115200
-#define MT_UART_DEFAULT_OVERFLOW FALSE
-
-#define ZTOOL_P1
-
-#define MT_APP_FUNC
-#define MT_APP_CNF_FUNC
-#define MT_SYS_FUNC
-#define MT_ZDO_FUNC
-#define MT_ZDO_MGMT
-#define MT_DEBUG_FUNC
-
-#endif
-
 
 #define HAL_KEY_P2_INPUT_PINS BV(0)
 
