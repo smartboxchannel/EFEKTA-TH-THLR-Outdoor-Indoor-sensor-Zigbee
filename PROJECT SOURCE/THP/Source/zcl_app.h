@@ -40,9 +40,7 @@ extern "C" {
 #define POWER_CFG   ZCL_CLUSTER_ID_GEN_POWER_CFG
 #define TEMP        ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT
 #define HUMIDITY    ZCL_CLUSTER_ID_MS_RELATIVE_HUMIDITY
-//#define SOIL_HUMIDITY                  0x0408
 #define PRESSURE    ZCL_CLUSTER_ID_MS_PRESSURE_MEASUREMENT
-//#define ILLUMINANCE ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT
 
 #define ZCL_UINT8   ZCL_DATATYPE_UINT8
 #define ZCL_UINT16  ZCL_DATATYPE_UINT16
@@ -50,11 +48,8 @@ extern "C" {
 #define ZCL_INT16   ZCL_DATATYPE_INT16
 #define ZCL_INT8    ZCL_DATATYPE_INT8
 
-
 #define ATTRID_MS_RELATIVE_HUMIDITY_MEASURED_VALUE_RAW_ADC              0x0200
 #define ATTRID_MS_RELATIVE_HUMIDITY_MEASURED_VALUE_BATTERY_RAW_ADC      0x0201
-
-
 
 /*********************************************************************
  * TYPEDEFS
@@ -75,18 +70,10 @@ extern int16 zclApp_PressureSensor_MeasuredValue;
 extern int16 zclApp_PressureSensor_ScaledValue;
 extern int8 zclApp_PressureSensor_Scale;
 extern uint16 zclApp_HumiditySensor_MeasuredValue;
-//extern int16 zclApp_DS18B20_MeasuredValue;
-//extern uint16 zclApp_SoilHumiditySensor_MeasuredValue;
-//extern uint16 zclApp_SoilHumiditySensor_MeasuredValueRawAdc;
-//extern uint16 zclApp_IlluminanceSensor_MeasuredValue;
-//extern uint16 zclApp_IlluminanceSensor_MeasuredValueRawAdc;
 
 // attribute list
 extern CONST zclAttrRec_t zclApp_AttrsFirstEP[];
-//extern CONST zclAttrRec_t zclApp_AttrsSecondEP[];
-//extern CONST uint8 zclApp_AttrsSecondEPCount;
 extern CONST uint8 zclApp_AttrsFirstEPCount;
-
 
 extern const uint8 zclApp_ManufacturerName[];
 extern const uint8 zclApp_ModelId[];
