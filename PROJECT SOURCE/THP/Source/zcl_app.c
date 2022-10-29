@@ -86,9 +86,9 @@ byte zclApp_TaskID;
 
 static uint8 currentSensorsReadingPhase = 0;
 int16 temp_old = 0;
-int16 temp_tr = 33;
+int16 temp_tr = 15;
 int16 humi_old = 0;
-int16 humi_tr = 50;
+int16 humi_tr = 100;
 int16 pres_old = 0;
 int16 pres_tr = 10;
 int16 startWork = 0;
@@ -111,10 +111,6 @@ static void zclApp_Report(void);
 static void zclApp_ReadSensors(void);
 static void zclApp_InitBME280(struct bme280_dev *dev);
 static void zclApp_ReadBME280(struct bme280_dev *dev);
-//static void zclApp_ReadDS18B20(void);
-//static void zclApp_ReadLumosity(void);
-//static void zclApp_ReadSoilHumidity(void);
-//static void zclApp_InitPWM(void);
 
 /*********************************************************************
  * ZCL General Profile Callback table
@@ -131,26 +127,17 @@ static zclGeneral_AppCallbacks_t zclApp_CmdCallbacks = {
 };
 
 void zclApp_Init(byte task_id) {
-    //IO_IMODE_PORT_PIN(SOIL_MOISTURE_PORT, SOIL_MOISTURE_PIN, IO_TRI); // tri state p0.4 (soil humidity pin)
-    //IO_IMODE_PORT_PIN(LUMOISITY_PORT, LUMOISITY_PIN, IO_TRI);         // tri state p0.7 (lumosity pin)
     IO_PUD_PORT(OCM_CLK_PORT, IO_PUP);
-    IO_PUD_PORT(OCM_DATA_PORT, IO_PUP)
+    IO_PUD_PORT(OCM_DATA_PORT, IO_PUP);
     POWER_OFF_SENSORS();
 
     HalI2CInit();
-    //zclApp_InitPWM();
-    // this is important to allow connects throught routers
-    // to make this work, coordinator should be compiled with this flag #define TP2_LEGACY_ZC
+  
     requestNewTrustCenterLinkKey = FALSE;
-
     zclApp_TaskID = task_id;
-
     zclGeneral_RegisterCmdCallbacks(1, &zclApp_CmdCallbacks);
     zcl_registerAttrList(zclApp_FirstEP.EndPoint, zclApp_AttrsFirstEPCount, zclApp_AttrsFirstEP);
     bdb_RegisterSimpleDescriptor(&zclApp_FirstEP);
-
-//    zcl_registerAttrList(zclApp_SecondEP.EndPoint, zclApp_AttrsSecondEPCount, zclApp_AttrsSecondEP);
-//    bdb_RegisterSimpleDescriptor(&zclApp_SecondEP);
 
     zcl_registerForMsg(zclApp_TaskID);
 
@@ -199,7 +186,6 @@ uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
         pushBut = true;
         return (events ^ APP_READ_SENSORS_EVT);
     }
-
     // Discard unknown events
     return 0;
 }
@@ -210,23 +196,15 @@ static void zclApp_HandleKeys(byte portAndAction, byte keyCode) {
     zclCommissioning_HandleKeys(portAndAction, keyCode);
     if (portAndAction & HAL_KEY_PRESS) {
         LREPMaster("Key press\r\n");
-        osal_start_timerEx(zclApp_TaskID, APP_REPORT_EVT, 500);
+        osal_start_timerEx(zclApp_TaskID, APP_REPORT_EVT, 200);
     }
 }
 
 static void zclApp_ReadSensors(void) {
     LREP("currentSensorsReadingPhase %d\r\n", currentSensorsReadingPhase);
-    /**
-     * FYI: split reading sensors into phases, so single call wouldn't block processor
-     * for extensive ammount of time
-     * */
-    HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
     switch (currentSensorsReadingPhase++) {
+ 
     case 0:
-        POWER_ON_SENSORS();
-        break;
-
-    case 1:
         if(startWork <= 5){
         startWork++;
         zclBattery_Report();
@@ -247,17 +225,20 @@ static void zclApp_ReadSensors(void) {
       }
       }
       break;
-      
-    case 2:
+            
+    case 1:
+        POWER_ON_SENSORS();
         zclApp_InitBME280(&bme_dev);
+        POWER_OFF_SENSORS();
         if(pushBut == true){
         pushBut = false;
         }
         break;
-        
+
     default:
         POWER_OFF_SENSORS();
         currentSensorsReadingPhase = 0;
+        HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
         break;
     }
     if (currentSensorsReadingPhase != 0) {
