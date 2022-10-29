@@ -156,6 +156,7 @@ uint16 zclCommissioning_event_loop(uint8 task_id, uint16 events) {
         LREPMaster("APP_END_DEVICE_REJOIN_EVT\r\n");
 #if ZG_BUILD_ENDDEVICE_TYPE
         bdb_ZedAttemptRecoverNwk();
+        osal_start_timerEx(zclCommissioning_TaskId, APP_COMMISSIONING_CLOCK_DOWN_POLING_RATE_EVT, 10 * 1000);
 #endif
         return (events ^ APP_COMMISSIONING_END_DEVICE_REJOIN_EVT);
     }

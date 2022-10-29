@@ -55,16 +55,12 @@ uint8 getBatteryRemainingPercentageZCL(uint16 millivolts) { return (uint8)mapRan
 
 uint8 getBatteryRemainingPercentageZCLCR2032(uint16 volt16) {
     float battery_level;
-    if (volt16 >= 3000) {
+    if (volt16 >= 3200) {
         battery_level = 100;
-    } else if (volt16 > 2900) {
-        battery_level = 100 - ((3000 - volt16) * 58) / 100;
-    } else if (volt16 > 2740) {
-        battery_level = 42 - ((2900 - volt16) * 24) / 160;
-    } else if (volt16 > 2440) {
-        battery_level = 18 - ((2740 - volt16) * 12) / 300;
-    } else if (volt16 > 2100) {
-        battery_level = 6 - ((2440 - volt16) * 6) / 340;
+    } else if (volt16 > 2200) {
+        battery_level = 100 - ((3200 - volt16) * 90) / 1000;
+    } else if (volt16 > 1800) {
+        battery_level = 10 - ((2200 - volt16) * 10) / 400;
     } else {
         battery_level = 0;
     }
