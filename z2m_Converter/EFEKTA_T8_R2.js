@@ -82,7 +82,7 @@ const definition = {
         zigbeeModel: ['EFEKTA_T8'],
         model: 'EFEKTA_T8',
         vendor: 'EFEKTALAB',
-        description: 'EFEKTA_T8 - Temperature sensor, support up to 10 DS18B20 sensors on one line. Self-contained, powered by 2 AAA batteries',
+        description: 'EFEKTA_T8 - Temperature sensor, support up to 8 DS18B20 sensors on one line. Self-contained, powered by 2 AAA batteries',
         fromZigbee: [fz.temperature, fz.battery, fzLocal.temperaturef_config, fzLocal.temperaturef_config2, fzLocal.node_config, fzLocal.node_config2],
         toZigbee: [tz.factory_reset, tzLocal.node_config],
 		meta: {multiEndpoint: true},
