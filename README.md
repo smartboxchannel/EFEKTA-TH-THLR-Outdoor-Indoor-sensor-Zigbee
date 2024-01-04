@@ -1,5 +1,9 @@
 # Efekta THP_LR \ THP
 
+Телеграм чат DIY Devices - https://t.me/diy_devices
+
+Продажа DIY Устройств - https://t.me/diydevmart
+
 ##### Option 1 - DIY outdoor/indoor long-range sensor for temperature, humidity and atmospheric pressure
 
 ##### Option 2 - DIY outdoor/indoor temperature, humidity and atmospheric pressure sensor, long battery life
