@@ -1,5 +1,9 @@
 # Efekta THP_LR \ THP
 
+Поблагодарить автора: https://www.donationalerts.com/r/efektalab
+
+Thank the author: http://www.donationalerts.ru/r/EfektaLab
+
 Телеграм чат DIY Devices - https://t.me/diy_devices
 
 Продажа DIY Устройств - https://t.me/diydevmart
