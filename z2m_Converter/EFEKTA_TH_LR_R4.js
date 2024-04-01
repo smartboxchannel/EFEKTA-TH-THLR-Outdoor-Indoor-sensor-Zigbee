@@ -5,6 +5,7 @@ const reporting = require('zigbee-herdsman-converters/lib/reporting');
 const e = exposes.presets;
 const ea = exposes.access;
 
+
 const tzLocal = {
     node_config: {
         key: ['reading_interval'],
