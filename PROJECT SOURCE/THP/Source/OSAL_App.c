@@ -11,7 +11,7 @@
 #include "zcl_app.h"
 #include "factory_reset.h"
 #include "commissioning.h"
-#include "Debug.h"
+//#include "Debug.h"
 
 #if defined ( MT_TASK )
   #include "MT.h"
@@ -37,7 +37,7 @@ const uint8 tasksCnt = sizeof(tasksArr) / sizeof(tasksArr[0]);
 uint16 *tasksEvents;
 
 void osalInitTasks(void) {
-    DebugInit();
+    //DebugInit();
     uint8 taskID = 0;
 
     tasksEvents = (uint16 *)osal_mem_alloc(sizeof(uint16) * tasksCnt);

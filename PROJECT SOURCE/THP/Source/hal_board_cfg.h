@@ -210,9 +210,9 @@ extern void MAC_RfFrontendSetup(void);
   #define LED1_POLARITY     ACTIVE_HIGH
 
 //power pin
-#define LED4_BV           BV(3)
-#define LED4_SBIT         P1_3
-#define LED4_DDR          P1DIR
+#define LED4_BV           BV(2)
+#define LED4_SBIT         P0_2
+#define LED4_DDR          P0DIR
 #define LED4_POLARITY     ACTIVE_HIGH
 
 #define HAL_TURN_OFF_LED1()       st( LED1_SBIT = LED1_POLARITY (0); )

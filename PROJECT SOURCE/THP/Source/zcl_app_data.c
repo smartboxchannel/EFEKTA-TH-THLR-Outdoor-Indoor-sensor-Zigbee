@@ -2,86 +2,44 @@
 #include "OSAL.h"
 #include "ZComDef.h"
 #include "ZDConfig.h"
-
 #include "zcl.h"
 #include "zcl_general.h"
 #include "zcl_ms.h"
 #include "zcl_ha.h"
-
 #include "zcl_app.h"
-
 #include "battery.h"
-#include "version.h"
-/*********************************************************************
- * CONSTANTS
- */
 
-#define APP_DEVICE_VERSION 2
-#define APP_FLAGS 0
+#define APP_DEVICE_VERSION                                                      2
+#define APP_FLAGS                                                               0
 
-#define APP_HWVERSION 1
-#define APP_ZCLVERSION 1
+#define APP_HWVERSION                                                           1
+#define APP_ZCLVERSION                                                          1
 
-/*********************************************************************
- * TYPEDEFS
- */
-
-/*********************************************************************
- * MACROS
- */
-
-/*********************************************************************
- * GLOBAL VARIABLES
- */
-
-// Global attributes
 const uint16 zclApp_clusterRevision_all = 0x0001;
 
 int16 zclApp_Temperature_Sensor_MeasuredValue = 0;
 int16 zclApp_PressureSensor_MeasuredValue = 0;
 int16 zclApp_PressureSensor_ScaledValue = 0;
 int8 zclApp_PressureSensor_Scale = -1;
-
 uint16 zclApp_HumiditySensor_MeasuredValue = 0;
+int16 sendInitReportCount = 0;
 
-//uint16 zclApp_SoilHumiditySensor_MeasuredValue = 0;
-//uint16 zclApp_SoilHumiditySensor_MeasuredValueRawAdc = 0;
-
-//int16 zclApp_DS18B20_MeasuredValue = 0;
-
-//uint16 zclApp_IlluminanceSensor_MeasuredValue = 0;
-//uint16 zclApp_IlluminanceSensor_MeasuredValueRawAdc = 0;
-
-// Basic Cluster
 const uint8 zclApp_HWRevision = APP_HWVERSION;
 const uint8 zclApp_ZCLVersion = APP_ZCLVERSION;
 const uint8 zclApp_ApplicationVersion = 3;
 const uint8 zclApp_StackVersion = 4;
 
 //{lenght, 'd', 'a', 't', 'a'}
-const uint8 zclApp_ManufacturerName[] = {13, 'e', 'f', 'e', 'k', 't', 'a', 'l', 'a', 'b', '.', 'c', 'o', 'm'};
+const uint8 zclApp_ManufacturerName[] = {9, 'E', 'f', 'e', 'k', 't', 'a', 'L', 'a', 'b'};
 #ifdef OUTDOOR_LONG_RANGE
 const uint8 zclApp_ModelId[] = {13, 'E', 'F', 'E', 'K', 'T', 'A', '_', 'T', 'H', 'P', '_', 'L', 'R'};
 #else
 const uint8 zclApp_ModelId[] = {10, 'E', 'F', 'E', 'K', 'T', 'A', '_', 'T', 'H', 'P'};
 #endif
+const uint8 zclApp_DateCode[] = { 12, '2', '0', '2', '4', '1', '0', '1', '4', ' ', '6', '4', '3'};
+const uint8 zclApp_SWBuildID[] = {5, '1', '.', '0', '.', '3'};
 
 const uint8 zclApp_PowerSource = POWER_SOURCE_BATTERY;
-
-/*********************************************************************
- * ATTRIBUTE DEFINITIONS - Uses REAL cluster IDs
- */
-
-
-// msTemperatureMeasurement int16
-// msRelativeHumidity:  uint16
-// msPressureMeasurement   int16
-// msIlluminanceMeasurement uint16
-// #define ZCL_CLUSTER_ID_GEN_BASIC                             0x0000
-// #define ZCL_CLUSTER_ID_GEN_POWER_CFG                         0x0001
-// #define ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT            0x0400
-// #define ZCL_CLUSTER_ID_MS_TEMPERATURE_MEASUREMENT            0x0402
-// #define ZCL_CLUSTER_ID_MS_PRESSURE_MEASUREMENT               0x0403
 
 CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_BASIC_ZCL_VERSION, ZCL_UINT8, R, (void *)&zclApp_ZCLVersion}},
@@ -106,20 +64,20 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
 
 uint8 CONST zclApp_AttrsFirstEPCount = (sizeof(zclApp_AttrsFirstEP) / sizeof(zclApp_AttrsFirstEP[0]));
 
-const cId_t zclApp_InClusterListFirstEP[] = {ZCL_CLUSTER_ID_GEN_BASIC};
+const cId_t zclApp_InClusterListFirstEP[] = {ZCL_CLUSTER_ID_GEN_BASIC, POWER_CFG, TEMP, PRESSURE, HUMIDITY};
 #define APP_MAX_INCLUSTERS (sizeof(zclApp_InClusterListFirstEP) / sizeof(zclApp_InClusterListFirstEP[0]))
 
 const cId_t zclApp_OutClusterList[] = {POWER_CFG, TEMP, PRESSURE, HUMIDITY};
 #define APP_MAX_OUT_CLUSTERS (sizeof(zclApp_OutClusterList) / sizeof(zclApp_OutClusterList[0]))
 
 SimpleDescriptionFormat_t zclApp_FirstEP = {
-    1,                                                  //  int Endpoint;
-    ZCL_HA_PROFILE_ID,                                  //  uint16 AppProfId[2];
-    ZCL_HA_DEVICEID_SIMPLE_SENSOR,                      //  uint16 AppDeviceId[2];
-    APP_DEVICE_VERSION,                                 //  int   AppDevVer:4;
-    APP_FLAGS,                                          //  int   AppFlags:4;
-    APP_MAX_INCLUSTERS,                        //  byte  AppNumInClusters;
-    (cId_t *)zclApp_InClusterListFirstEP,               //  byte *pAppInClusterList;
-    APP_MAX_OUT_CLUSTERS,          //  byte  AppNumInClusters;
-    (cId_t *)zclApp_OutClusterList //  byte *pAppInClusterList;
+    1,
+    ZCL_HA_PROFILE_ID,
+    ZCL_HA_DEVICEID_SIMPLE_SENSOR,
+    APP_DEVICE_VERSION,
+    APP_FLAGS,
+    APP_MAX_INCLUSTERS,
+    (cId_t *)zclApp_InClusterListFirstEP,
+    APP_MAX_OUT_CLUSTERS,
+    (cId_t *)zclApp_OutClusterList
 };
