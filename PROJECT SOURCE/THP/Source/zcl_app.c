@@ -160,7 +160,6 @@ uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
 
     if (events & APP_READ_SENSORS_EVT) {
         zclApp_ReadSensors();
-        pushBut = true;
         return (events ^ APP_READ_SENSORS_EVT);
     }
     if (events & APP_REPORT_BATT_EVT) {
