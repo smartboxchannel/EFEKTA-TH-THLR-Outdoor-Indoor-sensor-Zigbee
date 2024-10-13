@@ -21,14 +21,10 @@
 #include "bdb_interface.h"
 #include "gp_interface.h"
 
-#include "Debug.h"
-
-#include "OnBoard.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 
-/* HAL */
+#include "OnBoard.h"
 #include "bme280.h"
 #include "hal_adc.h"
 #include "hal_drivers.h"
@@ -40,7 +36,7 @@
 #include "commissioning.h"
 #include "factory_reset.h"
 #include "utils.h"
-#include "version.h"
+
 
 /*********************************************************************
  * MACROS
@@ -61,40 +57,13 @@
         IO_PUD_PORT(OCM_DATA_PORT, IO_PDN);                                                                                                \
     } while (0)
 
-/*********************************************************************
- * CONSTANTS
- */
-
-/*********************************************************************
- * TYPEDEFS
- */
-
-/*********************************************************************
- * GLOBAL VARIABLES
- */
 
 extern bool requestNewTrustCenterLinkKey;
 byte zclApp_TaskID;
-
-/*********************************************************************
- * GLOBAL FUNCTIONS
- */
-
-/*********************************************************************
- * LOCAL VARIABLES
- */
-
 static uint8 currentSensorsReadingPhase = 0;
-int16 temp_old = 0;
-int16 temp_tr = 15;
-int16 humi_old = 0;
-int16 humi_tr = 100;
-int16 pres_old = 0;
-int16 pres_tr = 10;
-int16 startWork = 0;
-int16 sendBattCount = 0;
-bool pushBut = false;
-
+static bool pushBut = false;
+static bool initOut = false;
+uint8 SeqNum = 0;
 afAddrType_t inderect_DstAddr = {.addrMode = (afAddrMode_t)AddrNotPresent, .endPoint = 0, .addr.shortAddr = 0};
 struct bme280_data bme_results;
 struct bme280_dev bme_dev = {.dev_id = BME280_I2C_ADDR_PRIM,
@@ -102,19 +71,19 @@ struct bme280_dev bme_dev = {.dev_id = BME280_I2C_ADDR_PRIM,
                              .read = I2C_ReadMultByte,
                              .write = I2C_WriteMultByte,
                              .delay_ms = user_delay_ms};
-/*********************************************************************
- * LOCAL FUNCTIONS
- */
+
 static void zclApp_HandleKeys(byte shift, byte keys);
 static void zclApp_Report(void);
-
 static void zclApp_ReadSensors(void);
+static void zclSendPres(void);
+static void zclSendTemp(void);
+static void zclSendHum(void);
+static void zclApp_LedOn(void);
+static void zclApp_LedOn2(void);
+static void zclApp_LedOff(void);
 static void zclApp_InitBME280(struct bme280_dev *dev);
 static void zclApp_ReadBME280(struct bme280_dev *dev);
 
-/*********************************************************************
- * ZCL General Profile Callback table
- */
 static zclGeneral_AppCallbacks_t zclApp_CmdCallbacks = {
     NULL, // Basic Cluster Reset command
     NULL, // Identify Trigger Effect command
@@ -127,31 +96,31 @@ static zclGeneral_AppCallbacks_t zclApp_CmdCallbacks = {
 };
 
 void zclApp_Init(byte task_id) {
-    IO_PUD_PORT(OCM_CLK_PORT, IO_PUP);
-    IO_PUD_PORT(OCM_DATA_PORT, IO_PUP);
-    POWER_OFF_SENSORS();
 
+    HAL_TURN_ON_LED1();
+    user_delay_ms(300);
+    HAL_TURN_OFF_LED1();
+    POWER_OFF_SENSORS();
     HalI2CInit();
   
     requestNewTrustCenterLinkKey = FALSE;
     zclApp_TaskID = task_id;
-    zclGeneral_RegisterCmdCallbacks(1, &zclApp_CmdCallbacks);
-    zcl_registerAttrList(zclApp_FirstEP.EndPoint, zclApp_AttrsFirstEPCount, zclApp_AttrsFirstEP);
+    
     bdb_RegisterSimpleDescriptor(&zclApp_FirstEP);
-
+    zclGeneral_RegisterCmdCallbacks(zclApp_FirstEP.EndPoint, &zclApp_CmdCallbacks);
+    zcl_registerAttrList(zclApp_FirstEP.EndPoint, zclApp_AttrsFirstEPCount, zclApp_AttrsFirstEP);
+    
     zcl_registerForMsg(zclApp_TaskID);
-
-    // Register for all key events - This app will handle all key events
     RegisterForKeys(zclApp_TaskID);
-    LREP("Started build %s \r\n", zclApp_DateCodeNT);
 
-    osal_start_reload_timer(zclApp_TaskID, APP_REPORT_EVT, APP_REPORT_DELAY);
+    osal_start_reload_timer(zclApp_TaskID, APP_REPORT_EVT, 7000);
+    osal_start_reload_timer(zclApp_TaskID, APP_REPORT_BATT_EVT, APP_REPORT_BATT_DELAY);
 }
 
 uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
     afIncomingMSGPacket_t *MSGpkt;
 
-    (void)task_id; // Intentionally unreferenced parameter
+    (void)task_id;
     if (events & SYS_EVENT_MSG) {
         while ((MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive(zclApp_TaskID))) {
             switch (MSGpkt->hdr.event) {
@@ -167,62 +136,104 @@ uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
             default:
                 break;
             }
-            // Release the memory
             osal_msg_deallocate((uint8 *)MSGpkt);
         }
-        // return unprocessed events
         return (events ^ SYS_EVENT_MSG);
     }
 
     if (events & APP_REPORT_EVT) {
-        LREPMaster("APP_REPORT_EVT\r\n");
-        zclApp_Report();
+        if (initOut == false){
+          sendInitReportCount++;
+          if(sendInitReportCount  >=  5){
+            osal_stop_timerEx(zclApp_TaskID, APP_REPORT_EVT);
+            osal_clear_event(zclApp_TaskID, APP_REPORT_EVT);
+            osal_start_reload_timer(zclApp_TaskID, APP_REPORT_EVT, APP_REPORT_DELAY);
+            initOut = true;
+          }
+          pushBut = true;
+          zclApp_Report();
+        }else{
+         zclApp_Report();  
+        }
         return (events ^ APP_REPORT_EVT);
     }
 
     if (events & APP_READ_SENSORS_EVT) {
-        LREPMaster("APP_READ_SENSORS_EVT\r\n");
         zclApp_ReadSensors();
         pushBut = true;
         return (events ^ APP_READ_SENSORS_EVT);
     }
-    // Discard unknown events
+    if (events & APP_REPORT_BATT_EVT) {
+        pushBut = true;
+        return (events ^ APP_REPORT_BATT_EVT);
+    }
+    if (events & APP_LED_EVT) {
+           zclApp_LedOff();
+        return (events ^ APP_LED_EVT);
+    }
+    if (events & APP_LED2_EVT) {
+           zclApp_LedOff();
+           osal_start_timerEx(zclApp_TaskID, APP_LEDON_EVT, 150);
+           
+        return (events ^ APP_LED2_EVT);
+    }
+     if (events & APP_LEDON_EVT) {
+          zclApp_LedOn(); 
+           
+        return (events ^ APP_LEDON_EVT);
+    }
     return 0;
 }
 
+
+static void zclApp_LedOn(void){
+   HAL_TURN_ON_LED1();
+  osal_start_timerEx(zclApp_TaskID, APP_LED_EVT, 50);
+}
+
+static void zclApp_LedOn2(void){
+   HAL_TURN_ON_LED1();
+  osal_start_timerEx(zclApp_TaskID, APP_LED2_EVT, 50);
+}
+
+static void zclApp_LedOff(void){
+   HAL_TURN_OFF_LED1();
+}
+
 static void zclApp_HandleKeys(byte portAndAction, byte keyCode) {
-    LREP("zclApp_HandleKeys portAndAction=0x%X keyCode=0x%X\r\n", portAndAction, keyCode);
-    zclFactoryResetter_HandleKeys(portAndAction, keyCode);
-    zclCommissioning_HandleKeys(portAndAction, keyCode);
-    if (portAndAction & HAL_KEY_PRESS) {
-        LREPMaster("Key press\r\n");
-        osal_start_timerEx(zclApp_TaskID, APP_REPORT_EVT, 200);
+    
+#if APP_COMMISSIONING_BY_LONG_PRESS == TRUE
+    if (bdbAttributes.bdbNodeIsOnANetwork == 1) {
+      zclFactoryResetter_HandleKeys(portAndAction, keyCode);
     }
+#else
+    zclFactoryResetter_HandleKeys(portAndAction, keyCode);
+#endif
+  
+    zclCommissioning_HandleKeys(portAndAction, keyCode);
+    
+    if (portAndAction & HAL_KEY_PRESS) {
+      if (bdbAttributes.bdbNodeIsOnANetwork == 1){
+       
+      }else{
+      
+      }
+    }
+    if (portAndAction & HAL_KEY_RELEASE) {
+  
+        pushBut = true;
+        zclApp_Report();     
+
+        HAL_TURN_OFF_LED1();
+    } 
 }
 
 static void zclApp_ReadSensors(void) {
-    LREP("currentSensorsReadingPhase %d\r\n", currentSensorsReadingPhase);
     switch (currentSensorsReadingPhase++) {
  
     case 0:
-        if(startWork <= 5){
-        startWork++;
-        zclBattery_Report();
-        pushBut = true;
-      }
-      
-      if(startWork == 6){
-      sendBattCount++;
-      if(sendBattCount == 3){
-        zclBattery_Report();
-        sendBattCount = 0;
-        pushBut = true;
-      }else{
         if(pushBut){
-          zclBattery_Report();
-          sendBattCount = 0;
-        }
-      }
+        zclBattery_Report();
       }
       break;
             
@@ -230,19 +241,29 @@ static void zclApp_ReadSensors(void) {
         POWER_ON_SENSORS();
         zclApp_InitBME280(&bme_dev);
         POWER_OFF_SENSORS();
+        break;
+        
+    case 2:
+        zclSendTemp();
+        break;
+        
+    case 3:
+        zclSendHum();
+        break;
+        
+   case 4:
+        zclSendPres();
+        break;     
+        
+    default:
+        currentSensorsReadingPhase = 0;
         if(pushBut == true){
         pushBut = false;
         }
         break;
-
-    default:
-        POWER_OFF_SENSORS();
-        currentSensorsReadingPhase = 0;
-        HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-        break;
     }
     if (currentSensorsReadingPhase != 0) {
-        osal_start_timerEx(zclApp_TaskID, APP_READ_SENSORS_EVT, 10);
+        osal_start_timerEx(zclApp_TaskID, APP_READ_SENSORS_EVT, 20);
     }
 }
 
@@ -250,15 +271,10 @@ static void zclApp_ReadSensors(void) {
 
 static void _delay_us(uint16 microSecs) {
     while (microSecs--) {
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-    }
+    asm("nop"); asm("nop"); asm("nop"); asm("nop"); asm("nop"); asm("nop"); 
+    asm("nop"); asm("nop"); asm("nop"); asm("nop"); asm("nop"); asm("nop"); 
+    asm("nop");
+  }
 }
 
 void user_delay_ms(uint32_t period) { _delay_us(1000 * period); }
@@ -286,7 +302,7 @@ static void zclApp_InitBME280(struct bme280_dev *dev) {
 
         zclApp_ReadBME280(dev);
     } else {
-        LREP("ReadBME280 init error %d\r\n", rslt);
+        HAL_TURN_ON_LED1();
     }
 }
 static void zclApp_ReadBME280(struct bme280_dev *dev) {
@@ -295,40 +311,93 @@ static void zclApp_ReadBME280(struct bme280_dev *dev) {
         zclApp_Temperature_Sensor_MeasuredValue = (int16)bme_results.temperature;
         zclApp_PressureSensor_ScaledValue = (int16)(pow(10.0, (double)zclApp_PressureSensor_Scale) * (double)bme_results.pressure);
         zclApp_PressureSensor_MeasuredValue = bme_results.pressure / 100;
-        LREP("ReadBME280 t=%ld, p=%ld h=%ld\r\n", bme_results.temperature, bme_results.pressure, bme_results.humidity);
         zclApp_HumiditySensor_MeasuredValue = (uint16)(bme_results.humidity * 100 / 1024);
-        
-        if(!pushBut){
-    if (abs(zclApp_Temperature_Sensor_MeasuredValue - temp_old) >= temp_tr*10) {
-      temp_old = zclApp_Temperature_Sensor_MeasuredValue;
-      bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, TEMP, ATTRID_MS_TEMPERATURE_MEASURED_VALUE);
-    }
-    if (abs(zclApp_HumiditySensor_MeasuredValue - humi_old) >= humi_tr*10) {
-      humi_old = zclApp_HumiditySensor_MeasuredValue;
-      bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, HUMIDITY, ATTRID_MS_RELATIVE_HUMIDITY_MEASURED_VALUE);
-    }
-    
-    if (abs(zclApp_PressureSensor_MeasuredValue - pres_old) >= pres_tr*10) {
-      pres_old = zclApp_PressureSensor_MeasuredValue;
-      bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, PRESSURE, ATTRID_MS_PRESSURE_MEASUREMENT_MEASURED_VALUE);
-    }
-    
-    
-    }else{
-      temp_old = zclApp_Temperature_Sensor_MeasuredValue;
-      bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, TEMP, ATTRID_MS_TEMPERATURE_MEASURED_VALUE);
-      
-      humi_old = zclApp_HumiditySensor_MeasuredValue;
-      bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, HUMIDITY, ATTRID_MS_RELATIVE_HUMIDITY_MEASURED_VALUE);
-      
-      pres_old = zclApp_PressureSensor_MeasuredValue;
-      bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, PRESSURE, ATTRID_MS_PRESSURE_MEASUREMENT_MEASURED_VALUE);
-    }
-    } else {
-        LREP("ReadBME280 read error %d\r\n", rslt);
-    }
+    } 
 }
-static void zclApp_Report(void) { osal_start_timerEx(zclApp_TaskID, APP_READ_SENSORS_EVT, 10); }
 
-/****************************************************************************
-****************************************************************************/
+static void zclApp_Report(void) { 
+  if(devState == DEV_END_DEVICE && pushBut == true){
+  zclApp_LedOn();
+  }else if(devState == DEV_NWK_ORPHAN && pushBut == true || devState == DEV_NWK_BACKOFF && pushBut == true || devState == DEV_NWK_KA && pushBut == true){
+   zclApp_LedOn2(); 
+  }
+  if(sendInitReportCount == 0){
+     initOut = false;
+     osal_stop_timerEx(zclApp_TaskID, APP_REPORT_EVT);
+     osal_clear_event(zclApp_TaskID, APP_REPORT_EVT);
+     osal_start_reload_timer(zclApp_TaskID, APP_REPORT_EVT, 7000);
+  }
+  if (initOut == false){
+    NLME_SetPollRate(400);
+  }else{
+    NLME_SetPollRate(0);
+  }
+  
+  osal_start_timerEx(zclApp_TaskID, APP_READ_SENSORS_EVT, 20); 
+}
+
+static void zclSendPres(void) { 
+  if(pushBut == true){
+  zclReportCmd_t *pReportCmd;
+  const uint8 NUM_ATTRIBUTES = 2;
+  
+  pReportCmd = osal_mem_alloc(sizeof(zclReportCmd_t) + (NUM_ATTRIBUTES * sizeof(zclReport_t)));
+  if (pReportCmd != NULL) {
+    pReportCmd->numAttr = NUM_ATTRIBUTES;
+    pReportCmd->attrList[0].attrID = ATTRID_MS_PRESSURE_MEASUREMENT_MEASURED_VALUE;
+    pReportCmd->attrList[0].dataType = ZCL_INT16;
+    pReportCmd->attrList[0].attrData = (void *)(&zclApp_PressureSensor_MeasuredValue);
+    
+    pReportCmd->attrList[1].attrID = ATTRID_MS_PRESSURE_MEASUREMENT_SCALED_VALUE;
+    pReportCmd->attrList[1].dataType = ZCL_INT16;
+    pReportCmd->attrList[1].attrData = (void *)(&zclApp_PressureSensor_ScaledValue);
+
+     zcl_SendReportCmd(zclApp_FirstEP.EndPoint, &inderect_DstAddr, PRESSURE, pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, TRUE, SeqNum++);
+  }
+    osal_mem_free(pReportCmd);
+  }else{
+    bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, PRESSURE, ATTRID_MS_PRESSURE_MEASUREMENT_MEASURED_VALUE);
+  }
+}
+
+static void zclSendTemp(void) {
+  if(pushBut == true){
+  zclReportCmd_t *pReportCmd;
+  const uint8 NUM_ATTRIBUTES = 1;
+  
+  pReportCmd = osal_mem_alloc(sizeof(zclReportCmd_t) + (NUM_ATTRIBUTES * sizeof(zclReport_t)));
+  if (pReportCmd != NULL) {
+    pReportCmd->numAttr = NUM_ATTRIBUTES;
+    
+    pReportCmd->attrList[0].attrID = ATTRID_MS_TEMPERATURE_MEASURED_VALUE;
+    pReportCmd->attrList[0].dataType = ZCL_DATATYPE_INT16;
+    pReportCmd->attrList[0].attrData = (void *)(&zclApp_Temperature_Sensor_MeasuredValue);
+    
+    zcl_SendReportCmd(zclApp_FirstEP.EndPoint, &inderect_DstAddr, TEMP, pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, true, SeqNum++);
+  }
+    osal_mem_free(pReportCmd);
+  }else{
+    bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, TEMP, ATTRID_MS_TEMPERATURE_MEASURED_VALUE);
+  }
+}
+
+static void zclSendHum(void) {
+ if(pushBut == true){
+  zclReportCmd_t *pReportCmd;
+  const uint8 NUM_ATTRIBUTES = 1;
+  
+  pReportCmd = osal_mem_alloc(sizeof(zclReportCmd_t) + (NUM_ATTRIBUTES * sizeof(zclReport_t)));
+  if (pReportCmd != NULL) {
+    pReportCmd->numAttr = NUM_ATTRIBUTES;
+    
+    pReportCmd->attrList[0].attrID = ATTRID_MS_RELATIVE_HUMIDITY_MEASURED_VALUE;
+    pReportCmd->attrList[0].dataType = ZCL_DATATYPE_UINT16;
+    pReportCmd->attrList[0].attrData = (void *)(&zclApp_HumiditySensor_MeasuredValue);
+
+    zcl_SendReportCmd(zclApp_FirstEP.EndPoint, &inderect_DstAddr, HUMIDITY, pReportCmd, ZCL_FRAME_SERVER_CLIENT_DIR, true, SeqNum++);
+  }
+    osal_mem_free(pReportCmd);
+ }else{
+    bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, HUMIDITY, ATTRID_MS_RELATIVE_HUMIDITY_MEASURED_VALUE); 
+  }
+}
