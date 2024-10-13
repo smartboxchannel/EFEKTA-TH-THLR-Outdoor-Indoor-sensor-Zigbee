@@ -111,6 +111,9 @@ If the device has not fully passed the join
 4. Go to the LOGS tab
 5. Press and hold the mode button on the device, the indicator will light up in a second. If the device has found the network and started the login procedure, the indicator will go off after 6-9 seconds, and you can release the button. If the indicator goes off after 15 seconds, it means that the sensor has not detected an open network or has been denied a network connection.
 
+If the device is not transmitting data
+
+1. Go through the interview again, go through the configuration again, make sure that on the report page in zigbee2mqtt there are lines with settings separately for each data type.
 
 
 ### Other checks
@@ -121,7 +124,6 @@ Please, ensure the following:
 2. The RF part of your E18 board works. You can upload another firmware to it and try to pair it with your coordinator. Or you may use another coordinator and build a separate Zigbee network for testing.
 3. Your coordinator has free slots for direct connections.
 4. You permit joining on your coordinator.
-5. Your device did not join to other opened Zigbee network. When you press and hold the button, it should flash every 3-4 seconds. It means that the device in the joining state.
 
 ![Efekta THP_LR \ THP](https://raw.githubusercontent.com/smartboxchannel/EFEKTA-TH-THLR-Outdoor-Indoor-sensor-Zigbee/refs/heads/main/IMAGES/pp00.png) 
 
