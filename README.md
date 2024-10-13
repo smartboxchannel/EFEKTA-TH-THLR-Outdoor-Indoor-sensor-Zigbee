@@ -35,12 +35,12 @@ Thank the author: http://www.donationalerts.ru/r/EfektaLab
 
 
 ### What is it?
-It is a wireless temperature, pressure and humidity sensor, supports working in Zigbee networks. (Zigbee2mqtt open source project). Built on CC2530 chip (Zigbee), two modications: Ebyte E18-MS1PA2-PCB radio module with amplifier and Ebyte E18-MS1-PCB. Powered by the most common AAA batteries. The device comes with pre-installed open source software. Supported inZ2M, ZHA
+It is a wireless temperature, pressure and humidity sensor, supports working in Zigbee networks. Open source project. Built on CC2530 chip (Zigbee), two modications: Ebyte E18-MS1PA2-PCB radio module with amplifier and Ebyte E18-MS1-PCB. Powered by the most common AAA batteries. The device comes with pre-installed open source software. Supported in Z2M, ZHA, etc.
 
 ### What makes it special?
 RF module EBYTE E18-MS1PA2-PCB (CC2530) or Ebyte E18-MS1-PCB.
 
-BME280 or BMP280
+BME280
 
 Long runtime with two AAA battery.
 
@@ -69,47 +69,27 @@ Open the preinclude.h file, select the desired configuration
 
 //#define OUTDOOR_LONG_RANGE
 
-//#define BMP
-
-https://github.com/smartboxchannel/EFEKTA-THP-THPLR-Outdoor-Indoor-sensor-Zigbee/blob/9e8450923bca76330c3ec9616b2dffed900a4576/PROJECT%20SOURCE/THP/Source/preinclude.h#L85
-
 ---
 
 ### How to join:
 #### If device in FN(factory new) state:
-##### one way
+
 1. Open z2m, make sure that joining is prohibited
 2. Insert the battery into the device
 3. Click on the icon in z2m - allow joining (you have 180 seconds to add the device)
 4. Go to the LOGS tab
-5. Press the reset button on the device (the join procedure will begin, еhe device starts flashing the LED repeatedly)
-6. Wait, in case of successfull join, device will flash led 5 times, if join failed, device will flash led 2 times
+5. Press and hold the mode button on the device, the indicator will light up in a second. If the device has found the network and started the login procedure, the indicator will go off after 6-9 seconds, and you can release the button. If the indicator goes off after 15 seconds, it means that the sensor has not detected an open network or has been denied a network connection.
 
-##### another way
-1. Open z2m, make sure that joining is prohibited
-2. Insert the battery into the device
-3. Click on the icon in z2m - allow joining (you have 180 seconds to add the device)
-4. Go to the LOGS tab
-5. Press and hold button (1) for 2-3 seconds, until device start flashing the LED repeatedly
-6. Wait, in case of successfull join, device will flash led 5 times, if join failed, device will flash led 2 times
-
-
+### How to leave:
 #### If device in a network:
-##### one way 
-1. Hold button (1) for 10 seconds, this will reset device to FN(factory new) status 
-2. Click on the icon in z2m - allow joining (you have 180 seconds to add the device)
-3. Go to the LOGS tab
-5. Press and hold button (1) for 2-3 seconds, until device start flashing the LED repeatedly
-6. Wait, in case of successfull join, device will flash led 5 times, if join failed, device will flash led 2 times
-
-##### another way
-1.Find the device in the list of z2m devices and delete it by applying force remove
-2. Click on the icon in z2m - allow joining (you have 180 seconds to add the device)
-3. Go to the LOGS tab
-4. Press the reset button on the device (the join procedure will begin, еhe device starts flashing the LED repeatedly)
-5. Wait, in case of successfull join, device will flash led 5 times, if join failed, device will flash led 2 times
+1. Hold down the mode button for 10 seconds, after 2 seconds the LED will start flashing at a frequency of once per second, after 10 seconds the LED will light up for a long time, the device will send an exit message to the network and erase all network settings in its non-volatile memory.
 
 ![Efekta THP_LR \ THP](https://github.com/smartboxchannel/Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee/blob/main/IMAGES/003.png) 
+
+
+By default, the device is configured to operate on a timer, data thresholds are not set. The device will send data to the network every time it wakes up. For the version with a standard radio module, the default sleep interval is set to 15 seconds. For the version with a signal amplifier, the interval is 30 seconds. In order to configure the device, you must independently set the minimum report interval other than zero and the data change threshold.
+
+
 
 ### Troubleshooting
 
