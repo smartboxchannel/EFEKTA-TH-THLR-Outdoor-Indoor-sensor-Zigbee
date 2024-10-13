@@ -109,8 +109,7 @@ If the device has not fully passed the join
 2. Restart your coordinator (for example, restart Zigbee2MQTT if you use it).
 3. Click on the icon in z2m - allow joining (you have 180 seconds to add the device)
 4. Go to the LOGS tab
-5. Press and hold button (1) for 2-3 seconds, until device start flashing the LED repeatedly
-6. Wait, in case of successfull join, device will flash led 5 times, if join failed, device will flash led 2 times
+5. Press and hold the mode button on the device, the indicator will light up in a second. If the device has found the network and started the login procedure, the indicator will go off after 6-9 seconds, and you can release the button. If the indicator goes off after 15 seconds, it means that the sensor has not detected an open network or has been denied a network connection.
 
 
 
