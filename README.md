@@ -12,52 +12,11 @@ Thank the author: http://www.donationalerts.ru/r/EfektaLab
 
 ##### Option 2 - DIY outdoor/indoor temperature, humidity and atmospheric pressure sensor, long battery life
 
-### Sale: 
-
-#### The cost of the device without the enclosure: 
-
-##### $16.5 (shtc3: temperature, humidity)
-
-##### $22.5 (bme280: temperature, humidity, pressure)
-
-##### +$3 Long range radio module
-
-##### +$5 Enclosure
-
-##### Delivery is $12.5(worldwide).
-
-##### Tracknumber for tracking.
-
-##### You can buy a ready-made device by writing to the mail hello@efektalab.com
-
-##### Delivery is carried out worldwide.
-
-
-#### Video: 
-
-#### Telegram DiyDev - https://t.me/diy_devices
-
-More info at http://efektalab.com/eON_THP
-
 ### You can make your own pcb here - https://www.pcbway.com/setinvite.aspx?inviteid=550959
-
-
 
 ## V1_R1
 
 ![Efekta THP_LR \ THP](https://github.com/smartboxchannel/Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee/blob/main/IMAGES/001.png) 
-
-## V1_R2
-
-(not opensource)
-
-![Efekta THP_LR \ THP](https://github.com/smartboxchannel/Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee/blob/main/IMAGES/002.png)
-
-## V2_R1
-
-(not opensource)
-
-![Efekta THP_LR \ THP](https://github.com/smartboxchannel/Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee/blob/main/IMAGES/008.jpg)
 
 
 ![Efekta THP_LR \ THP](https://github.com/smartboxchannel/Outdoor-long-range-sensor-for-temperature-humidity-and-atmospheric-pressure-Zigbee/blob/main/IMAGES/01.jpg)
