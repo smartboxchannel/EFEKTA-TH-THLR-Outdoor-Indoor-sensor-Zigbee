@@ -88,7 +88,7 @@ Open the preinclude.h file, select the desired configuration
 
 
 By default, the device is configured to operate on a timer, data thresholds are not set. The device will send data to the network every time it wakes up. For the version with a standard radio module, the default sleep interval is set to 15 seconds. For the version with a signal amplifier, the interval is 30 seconds. In order to configure the device, you must independently set the minimum report interval other than zero and the data change threshold.
-
+![Efekta THP_LR \ THP](https://raw.githubusercontent.com/smartboxchannel/EFEKTA-TH-THLR-Outdoor-Indoor-sensor-Zigbee/refs/heads/main/IMAGES/0055.png) 
 
 
 ### Troubleshooting
