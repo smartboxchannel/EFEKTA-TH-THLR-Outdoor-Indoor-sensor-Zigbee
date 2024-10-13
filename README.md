@@ -122,3 +122,7 @@ Please, ensure the following:
 3. Your coordinator has free slots for direct connections.
 4. You permit joining on your coordinator.
 5. Your device did not join to other opened Zigbee network. When you press and hold the button, it should flash every 3-4 seconds. It means that the device in the joining state.
+
+![Efekta THP_LR \ THP](https://raw.githubusercontent.com/smartboxchannel/EFEKTA-TH-THLR-Outdoor-Indoor-sensor-Zigbee/refs/heads/main/IMAGES/pp00.png) 
+
+![Efekta THP_LR \ THP](https://raw.githubusercontent.com/smartboxchannel/EFEKTA-TH-THLR-Outdoor-Indoor-sensor-Zigbee/refs/heads/main/IMAGES/pp02.png) 
