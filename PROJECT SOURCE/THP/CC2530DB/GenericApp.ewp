@@ -754,7 +754,7 @@
             <name>BUILDACTION</name>
             <archiveVersion>1</archiveVersion>
             <data>
-                <prebuild>Python.exe "$PROJ_DIR$\..\ver.py"</prebuild>
+                <prebuild></prebuild>
                 <postbuild></postbuild>
             </data>
         </settings>
@@ -1167,12 +1167,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\Source\stdint.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Source\version.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Source\version.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Source\zcl_app.c</name>
@@ -1725,18 +1719,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wCoord.cfg</name>
-            <excluded>
-                <configuration>DIYRuZ_Flower</configuration>
-            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wEndev.cfg</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wRouter.cfg</name>
-            <excluded>
-                <configuration>DIYRuZ_Flower</configuration>
-            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wZCL.cfg</name>
