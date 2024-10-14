@@ -3,7 +3,7 @@
   "manufacturer": "EfektaLab",
   "model": "(EFEKTA_THP|EFEKTA_THP_LR)",
   "manufacturerId": "EfektaLab",
-  "modelId": (EFEKTA_THP|EFEKTA_THP_LR)",
+  "modelId": "(EFEKTA_THP|EFEKTA_THP_LR)",
   "catalogId": -1,
   "status": "Test",
   "template": "/_Battery/BatteryPercentageRemaining.json",
